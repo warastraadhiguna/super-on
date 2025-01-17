@@ -2,10 +2,11 @@
 
 namespace App\Filament\Resources\SingleSupervisionResource\Pages;
 
-use App\Filament\Resources\SingleSupervisionResource;
-use Filament\Actions;
 use Filament\Actions\Action;
+use Illuminate\Support\Facades\Auth;
 use Filament\Resources\Pages\EditRecord;
+use App\Filament\Resources\SingleSupervisionResource;
+use App\Models\ClassroomPeriodTeacherSubjectRelation;
 
 class EditSingleSupervision extends EditRecord
 {
@@ -45,5 +46,22 @@ class EditSingleSupervision extends EditRecord
                 'classroom_period_teacher_subject_relation_id' => $relationId, // 🔥 Meneruskan parameter
             ]);
 
+    }
+
+    protected function beforeFill(): void
+    {
+        $relationId = $this->record->classroom_period_teacher_subject_relation_id;
+
+        if (!$relationId) {
+            abort(403, 'Anda tidak memiliki izin untuk mengakses halaman ini.');
+        }
+
+        $relation = ClassroomPeriodTeacherSubjectRelation::with('teacherSubjectRelation')
+            ->where('id', $relationId)
+            ->first();
+
+        if (!$relation || $relation->teacherSubjectRelation->teacher_id !== Auth::id()) {
+            abort(403, 'Anda tidak memiliki izin untuk mengakses halaman ini.');
+        }
     }
 }

@@ -47,19 +47,20 @@ class CreateSingleSupervision extends CreateRecord
 
     }
 
-    public function mount(): void
+    protected function beforeFill(): void
     {
         $relationId = request('classroom_period_teacher_subject_relation_id');
+
         if (!$relationId) {
-            abort(403, 'Anda tidak memiliki izin untuk mengakses halaman ini.'); // ❌ Forbidden jika tidak sesuai
+            abort(403, 'Anda tidak memiliki izin untuk mengakses halaman ini.');
         }
-        if ($relationId) {
-            $relation = ClassroomPeriodTeacherSubjectRelation::with('teacherSubjectRelation')
-                ->where('id', $relationId)
-                ->first();
-            if (!$relation || $relation->teacherSubjectRelation->teacher_id !== Auth::id()) {
-                abort(403, 'Anda tidak memiliki izin untuk mengakses halaman ini.'); // ❌ Forbidden jika tidak sesuai
-            }
+
+        $relation = ClassroomPeriodTeacherSubjectRelation::with('teacherSubjectRelation')
+            ->where('id', $relationId)
+            ->first();
+
+        if (!$relation || $relation->teacherSubjectRelation->teacher_id !== Auth::id()) {
+            abort(403, 'Anda tidak memiliki izin untuk mengakses halaman ini.');
         }
     }
 }
