@@ -16,6 +16,7 @@ class SingleClassroomPeriodTeacherSubjectRelationResource extends Resource
 {
     protected static ?string $model = ClassroomPeriodTeacherSubjectRelation::class;
 
+    protected static ?string $navigationGroup = 'Menu Utama';
     protected static ?string $navigationIcon = 'heroicon-o-command-line';
 
     public static function form(Form $form): Form
@@ -48,8 +49,8 @@ class SingleClassroomPeriodTeacherSubjectRelationResource extends Resource
             ])
             ->actions([
                Action::make('supervision')
-                ->label('Supervision')
-                ->icon('heroicon-o-eye')
+                ->label('Data Berkas')
+                ->icon('heroicon-o-document-arrow-down')
                 ->url(fn ($record) => route('filament.admin.resources.single-supervisions.index', [
                     'classroom_period_teacher_subject_relation_id' => $record->id
                 ])) // 🔥 Mengarahkan ke halaman List SingleSupervision dengan filter

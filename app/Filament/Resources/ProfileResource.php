@@ -18,7 +18,7 @@ use Illuminate\Support\Facades\Auth;
 class ProfileResource extends Resource
 {
     protected static ?string $model = User::class;
-
+    protected static ?string $navigationGroup = 'Menu Utama';
     protected static ?string $navigationIcon = 'heroicon-o-user';
 
     public static function form(Form $form): Form

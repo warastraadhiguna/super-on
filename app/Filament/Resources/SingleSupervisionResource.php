@@ -18,7 +18,6 @@ use Illuminate\Database\Eloquent\Builder;
 class SingleSupervisionResource extends Resource
 {
     protected static ?string $model = Supervision::class;
-
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
     public static function form(Form $form): Form
