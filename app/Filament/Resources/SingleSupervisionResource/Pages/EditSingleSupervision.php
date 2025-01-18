@@ -64,4 +64,9 @@ class EditSingleSupervision extends EditRecord
             abort(403, 'Anda tidak memiliki izin untuk mengakses halaman ini.');
         }
     }
+
+    public function getBreadcrumbs(): array
+    {
+        return [];
+    }
 }

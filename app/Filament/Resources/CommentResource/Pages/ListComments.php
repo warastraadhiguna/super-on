@@ -15,7 +15,7 @@ class ListComments extends ListRecords
     {
         return [
         CreateAction::make()
-            ->url(fn () => route('filament.admin.resources.comments.create', ['supervision_id' => request('supervision_id')])) // ✅ Tambahkan parameter di tombol Create
+            ->url(fn () => route('filament.admin.resources.comments.create', ['supervision_id' => (session('supervision_id') ?? request()->query('supervision_id'))])) // ✅ Tambahkan parameter di tombol Create
         ];
     }
 
@@ -27,4 +27,8 @@ class ListComments extends ListRecords
         }
     }
 
+    public function getBreadcrumbs(): array
+    {
+        return [];
+    }
 }

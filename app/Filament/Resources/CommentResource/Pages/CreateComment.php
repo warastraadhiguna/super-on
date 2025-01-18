@@ -40,4 +40,10 @@ class CreateComment extends CreateRecord
             ]);
 
     }
+
+
+    public function getBreadcrumbs(): array
+    {
+        return [];
+    }
 }

@@ -36,4 +36,9 @@ class ListSingleSupervisions extends ListRecords
             }
         }
     }
+
+    public function getBreadcrumbs(): array
+    {
+        return [];
+    }
 }

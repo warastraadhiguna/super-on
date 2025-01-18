@@ -12,6 +12,8 @@ use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Textarea;
 use Filament\Tables\Actions\EditAction;
 use App\Filament\Resources\CommentResource\Pages;
+use App\Models\Supervision;
+use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Select;
 use Filament\Tables\Actions\Action;
 use Filament\Tables\Actions\DeleteAction;
@@ -32,24 +34,54 @@ class CommentResource extends Resource
                     ->required(),
                 Hidden::make('user_id')->default(Auth::id()), // 🔥 Simpan user_id secara otomatis
                 Textarea::make('comment')->label('Komentar')->required(),
+                FileUpload::make('document')
+                    ->label('Dokumen')
+                    ->disk('public') // Gunakan penyimpanan public agar bisa diakses
+                    ->directory('comment-documents') // Simpan dalam folder ini
+                    ->preserveFilenames() // Gunakan nama asli file
+                    ->acceptedFileTypes(['application/pdf','image/jpg','image/png',  'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document']) // Hanya menerima file PDF dan Word
+                    ->maxSize(10240),
             ]);
     }
 
     public static function getEloquentQuery(): Builder
     {
-        return parent::getEloquentQuery()->when(request('supervision_id'), function ($query) {
-            $query->where('supervision_id', request('supervision_id'));
+        // return parent::getEloquentQuery()->when(request('supervision_id'), function ($query) {
+        //     $query->where('supervision_id', request()->query('supervision_id'));
+        // });
+
+        if (request()->has('supervision_id')) {
+            session(['supervision_id' => request()->query('supervision_id')]);
+        }
+
+        return parent::getEloquentQuery()->when(session('supervision_id'), function ($query) {
+            $query->where('supervision_id', session('supervision_id'));
         });
+
     }
 
     public static function table(Table $table): Table
     {
         return $table
+        ->header(function () {
+            $supervision = Supervision::find(session('supervision_id') ?? request()->query('supervision_id')); // 🔥 Ambil data supervision dengan ID 1
+
+            return view('filament.custom.supervision-header', [
+                'supervision' => $supervision
+            ]);
+        })
         ->defaultSort('created_at', 'desc')
+        ->striped()
             ->recordUrl(fn ($record) => null)
             ->columns([
                 Tables\Columns\TextColumn::make('user.name')->label('Dibuat oleh'),
                 Tables\Columns\TextColumn::make('comment')->label('Komentar')->wrap(),
+                Tables\Columns\TextColumn::make('document')
+                    ->label('Dokumen')
+                    ->formatStateUsing(fn ($state) => $state ? basename($state) : 'Tidak Ada File')
+                    ->url(fn ($record) => $record->document ? asset('storage/' . $record->document) : null) // 🔥 Buka file di tab baru
+                    ->openUrlInNewTab()
+                    ->color(fn ($state) => $state ? 'success' : 'gray'),
                 Tables\Columns\TextColumn::make('is_read')
                                 ->label('Dibaca?')
                                 ->formatStateUsing(fn ($state) => $state === 'y' ? '✅ Ya' : '❌ Belum'),
@@ -69,7 +101,10 @@ class CommentResource extends Resource
                 ->color('success') // 🟢 Warna hijau
                 ->visible(fn ($record) => $record->is_read === 'n' && Auth::id() !== $record->user_id) // 🔥 Hanya tampil jika belum dibaca
                 ->requiresConfirmation() // 🔥 Munculkan popup konfirmasi sebelum eksekusi
-                ->action(fn ($record) => $record->update(['is_read' => 'y'])), // 🔥 Update langsung ke database
+                ->action(function ($record, $livewire) {
+                    $record->update(['is_read' => 'y']); // 🔥 Update langsung ke database
+                    $livewire->dispatch('refreshTable'); // 🔥 Memastikan tabel direfresh tanpa kehilangan filter
+                }),
             ])
             ->bulkActions([
                 // Tables\Actions\BulkActionGroup::make([
@@ -113,4 +148,5 @@ class CommentResource extends Resource
     {
         return false; // ❌ Tidak akan muncul di sidebar
     }
+
 }

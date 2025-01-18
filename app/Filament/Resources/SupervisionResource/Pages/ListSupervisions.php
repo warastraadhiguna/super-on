@@ -10,10 +10,9 @@ class ListSupervisions extends ListRecords
 {
     protected static string $resource = SupervisionResource::class;
 
-    protected function getHeaderActions(): array
+
+    public function getBreadcrumbs(): array
     {
-        return [
-            Actions\CreateAction::make(),
-        ];
+        return [];
     }
 }

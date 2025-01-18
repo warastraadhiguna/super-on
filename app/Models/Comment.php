@@ -14,6 +14,7 @@ class Comment extends Model
         'user_id',
         'supervision_id',
         'comment',
+        'document',
         'is_read',
     ];
 

@@ -40,4 +40,9 @@ class EditComment extends EditRecord
             ]);
 
     }
+
+    public function getBreadcrumbs(): array
+    {
+        return [];
+    }
 }

@@ -1,17 +1,24 @@
 <x-filament::page>
     @if(auth()->user()->role === 'admin')
-    <div class="mt-1">
-        <h2 class="text-xl font-bold">Data Terbaru</h2>
-        <div class="bg-white shadow p-4 rounded-lg">
-            <ul>
-                @foreach(\App\Models\Supervision::with(['classroomPeriodTeacherSubjectRelation', 'classroomPeriodTeacherSubjectRelation.teacherSubjectRelation','classroomPeriodTeacherSubjectRelation.teacherSubjectRelation.teacher'])->latest()->take(5)->get() as $supervision)
-                    <li class="border-b py-2">
-                        {{ $supervision->name }} - {{ $supervision->classroomPeriodTeacherSubjectRelation->teacherSubjectRelation->teacher->name }} - {{ $supervision->created_at->format('d M Y H:i:s') }}
-                    </li>
-                @endforeach
-            </ul>
-        </div>
+<div class="mt-1">
+    <h2 class="text-xl font-bold text-gray-900 dark:text-white">Data Terbaru</h2>
+    <div class="bg-white dark:bg-gray-800 shadow p-4 rounded-lg">
+        <ul>
+            @foreach(\App\Models\Supervision::with([
+                'classroomPeriodTeacherSubjectRelation', 
+                'classroomPeriodTeacherSubjectRelation.teacherSubjectRelation',
+                'classroomPeriodTeacherSubjectRelation.teacherSubjectRelation.teacher'
+            ])->latest()->take(5)->get() as $supervision)
+                <li class="border-b py-2 text-gray-900 dark:text-gray-200">
+                    {{ $supervision->name }} - 
+                    {{ $supervision->classroomPeriodTeacherSubjectRelation->teacherSubjectRelation->teacher->name }} - 
+                    {{ $supervision->created_at->format('d M Y H:i:s') }}
+                </li>
+            @endforeach
+        </ul>
     </div>
+</div>
+
     @else
     <div class="mt-1">
         <h2 class="text-xl font-bold">Petunjuk Penggunaan</h2>
