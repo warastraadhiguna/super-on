@@ -108,4 +108,9 @@ class CommentResource extends Resource
     {
         return __('Data Komentar'); // Label pluSekolah
     }
+
+    public static function shouldRegisterNavigation(): bool
+    {
+        return false; // ❌ Tidak akan muncul di sidebar
+    }
 }
