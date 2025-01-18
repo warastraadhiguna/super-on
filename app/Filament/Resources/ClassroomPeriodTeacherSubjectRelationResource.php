@@ -65,6 +65,7 @@ class ClassroomPeriodTeacherSubjectRelationResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->recordUrl(fn ($record) => null)
             ->columns([
                 TextColumn::make('classroom.name')->label('Kelas')->sortable()->searchable(['classroom.name', 'period.name']),
                 TextColumn::make('period.name')->label('Periode')->sortable(),

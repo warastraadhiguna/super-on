@@ -54,6 +54,7 @@ class TeacherSubjectRelationResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->recordUrl(fn ($record) => null)
             ->columns([
                 TextColumn::make('teacher.name')->label('Guru')->sortable()->searchable(['teacher.name', 'subject.name']),
                 TextColumn::make('subject.name')->label('Mata Pelajaran')->sortable(),

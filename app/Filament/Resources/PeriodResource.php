@@ -43,6 +43,7 @@ class PeriodResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->recordUrl(fn ($record) => null)
             ->columns([
                 TextColumn::make('name')->label('Nama')->searchable(['name', 'note']),
                 TextColumn::make('note')->label('Catatan'),

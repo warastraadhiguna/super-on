@@ -34,6 +34,7 @@ class SubjectResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->recordUrl(fn ($record) => null)
             ->columns([
                 TextColumn::make('code')->label('Kode Mata Pelajaran'),
                 TextColumn::make('name')->label('Nama Mata Pelajaran')->searchable(['name', 'code']),

@@ -60,6 +60,7 @@ class UserResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->recordUrl(fn ($record) => null)
             ->columns([
                 TextColumn::make('number')->label('Nomor Induk')->searchable(['name', 'address', 'number']),
                 TextColumn::make('name')->label('Nama'),

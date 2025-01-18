@@ -2,53 +2,28 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\SingleSupervisionResource\Pages;
+use App\Filament\Resources\SupervisionResource\Pages;
 use App\Models\Supervision;
-use Filament\Forms\Components\FileUpload;
-use Filament\Forms\Components\Hidden;
-use Filament\Forms\Components\Textarea;
-use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Actions\Action;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Auth;
 
-class SingleSupervisionResource extends Resource
+class SupervisionResource extends Resource
 {
     protected static ?string $model = Supervision::class;
+
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
     public static function form(Form $form): Form
     {
-        // dd(request('classroom_period_teacher_subject_relation_id'));
         return $form
             ->schema([
-                Hidden::make('classroom_period_teacher_subject_relation_id')
-                    ->default(fn () => request('classroom_period_teacher_subject_relation_id')) // 🔥 Ambil dari request
-                    ->required(),
-
-                TextInput::make('name')
-                    ->label('Nama Berkas')
-                    ->required()
-                    ->maxLength(255),
-
-                TextInput::make('link')
-                    ->label('Tautan')
-                    ->url()
-                    ->nullable()
-                    ->maxLength(500),
-                Textarea::make('note')
-                    ->label('Catatan')
-                    ->maxLength(500),
-                FileUpload::make('document')
-                    ->label('Dokumen Supervisi')
-                    ->disk('public') // Gunakan penyimpanan public agar bisa diakses
-                    ->directory('supervision-documents') // Simpan dalam folder ini
-                    ->preserveFilenames() // Gunakan nama asli file
-                    ->acceptedFileTypes(['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document']) // Hanya menerima file PDF dan Word
-                    ->maxSize(10240),
+                //
             ]);
     }
 
@@ -61,13 +36,12 @@ class SingleSupervisionResource extends Resource
 
     public static function table(Table $table): Table
     {
-        // dd(request('classroom_period_teacher_subject_relation_id'));
         return $table
             ->recordUrl(fn ($record) => null)
             ->columns([
                 TextColumn::make('name')->label('Name')->sortable()->searchable(['name']),
                 TextColumn::make('note')->label('Catatan')->limit(50),
-            TextColumn::make('link')
+                TextColumn::make('link')
                     ->label('Tautan')
                     ->url(fn ($record) => $record->link) // 🔥 Buat agar bisa diklik
                     ->openUrlInNewTab() // 🔥 Buka di tab baru
@@ -85,9 +59,7 @@ class SingleSupervisionResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
-                Tables\Actions\Action::make('supervision')
+                Action::make('supervision')
                     ->label('Komentar')
                     ->color('info')
                     ->icon('heroicon-o-chat-bubble-bottom-center-text')
@@ -113,16 +85,11 @@ class SingleSupervisionResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListSingleSupervisions::route('/'),
-            'create' => Pages\CreateSingleSupervision::route('/create'),
-            'edit' => Pages\EditSingleSupervision::route('/{record}/edit'),
+            'index' => Pages\ListSupervisions::route('/'),
+            'create' => Pages\CreateSupervision::route('/create'),
+            'edit' => Pages\EditSupervision::route('/{record}/edit'),
         ];
     }
-
-    // public static function getNavigationLabel(): string
-    // {
-    //     return 'Berkas';
-    // }
 
     public static function shouldRegisterNavigation(): bool
     {
@@ -137,5 +104,15 @@ class SingleSupervisionResource extends Resource
     public static function getPluralModelLabel(): string
     {
         return __('Data Berkas'); // Label plural
+    }
+
+    public static function canViewAny(): bool
+    {
+        return Auth::user()?->role !== 'teacher'; // ✅ Hanya admin yang bisa melihat
+    }
+
+    public static function canCreate(): bool
+    {
+        return false; // ❌ Menghilangkan tombol tambah
     }
 }
