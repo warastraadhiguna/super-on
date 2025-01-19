@@ -1,0 +1,6 @@
+/* 🔥 Ubah background login */
+.fi-simple-main-ctn  {
+    background-image: url('/images/logo.png');
+    background-repeat: repeat;
+    background-size: 220px 220px; 
+}
