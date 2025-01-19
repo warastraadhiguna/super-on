@@ -49,6 +49,7 @@ class SingleClassroomPeriodTeacherSubjectRelationResource extends Resource
                 TextColumn::make('teacherSubjectRelation.teacher.name')->label('Guru')->sortable(),
                 TextColumn::make('teacherSubjectRelation.subject.name')->label('Mapel')->sortable(),
                 TextColumn::make('note')->label('Catatan')->limit(50),
+                TextColumn::make('assessment_score')->label('Nilai')
             ])
             ->filters([
                 //
@@ -61,6 +62,14 @@ class SingleClassroomPeriodTeacherSubjectRelationResource extends Resource
                     'classroom_period_teacher_subject_relation_id' => $record->id
                 ])) // 🔥 Mengarahkan ke halaman List SingleSupervision dengan filter
                 ->openUrlInNewTab(), // 🔥 Buka di tab baru
+                Action::make('assessment')
+                    ->label('Penilaian')
+                    ->color('secondary')
+                    ->icon('heroicon-o-document-arrow-up')
+                    ->url(fn ($record) => route('filament.admin.resources.single-assessments.index', [
+                        'classroom_period_teacher_subject_relation_id' => $record->id
+                    ])) // 🔥 Mengarahkan ke halaman List SingleSupervision dengan filter
+                    ->openUrlInNewTab(), // 🔥 Buka di tab baru
             ])
             ->bulkActions([
                 // Tables\Actions\BulkActionGroup::make([

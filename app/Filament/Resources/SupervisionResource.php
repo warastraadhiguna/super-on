@@ -67,14 +67,14 @@ class SupervisionResource extends Resource
             //
             ])
             ->actions([
-            Action::make('supervision')
-                ->label('Komentar')
-                ->color('info')
-                ->icon('heroicon-o-chat-bubble-bottom-center-text')
-                ->url(fn ($record) => route('filament.admin.resources.comments.index', [
-                    'supervision_id' => $record->id
-                ])) // 🔥 Mengarahkan ke halaman List SingleSupervision dengan filter
-                ->openUrlInNewTab(), // 🔥 Buka di tab baru
+                Action::make('supervision')
+                    ->label('Komentar')
+                    ->color('info')
+                    ->icon('heroicon-o-chat-bubble-bottom-center-text')
+                    ->url(fn ($record) => route('filament.admin.resources.comments.index', [
+                        'supervision_id' => $record->id
+                    ])) // 🔥 Mengarahkan ke halaman List SingleSupervision dengan filter
+                    ->openUrlInNewTab(), // 🔥 Buka di tab baru
             ])
             ->bulkActions([
             Tables\Actions\BulkActionGroup::make([

@@ -46,23 +46,53 @@ class SupervisionClassroomPeriodTeacherSubjectRelationResource extends Resource
                 TextColumn::make('teacherSubjectRelation.teacher.name')->label('Guru')->sortable(),
                 TextColumn::make('teacherSubjectRelation.subject.name')->label('Mapel')->sortable(),
                 TextColumn::make('note')->label('Catatan')->limit(50),
+                TextColumn::make('assessment_score')->label('Nilai')
             ])
             ->filters([
                 //
             ])
             ->actions([
-            Action::make('supervision')
-                ->label('Berkas')
-                ->icon('heroicon-o-document-arrow-down')
-                ->url(fn ($record) => route('filament.admin.resources.supervisions.index', [
-                    'classroom_period_teacher_subject_relation_id' => $record->id
-                ])) // 🔥 Mengarahkan ke halaman List SingleSupervision dengan filter
-                ->openUrlInNewTab(), // 🔥 Buka di tab baru
+                Action::make('supervision')
+                    ->label('Berkas')
+                    ->icon('heroicon-o-document-arrow-down')
+                    ->url(fn ($record) => route('filament.admin.resources.supervisions.index', [
+                        'classroom_period_teacher_subject_relation_id' => $record->id
+                    ])) // 🔥 Mengarahkan ke halaman List SingleSupervision dengan filter
+                    ->openUrlInNewTab(), // 🔥 Buka di tab baru
+                Action::make('assessment')
+                    ->label('Penilaian')
+                    ->color('secondary')
+                    ->icon('heroicon-o-document-arrow-up')
+                    ->url(fn ($record) => route('filament.admin.resources.assessments.index', [
+                        'classroom_period_teacher_subject_relation_id' => $record->id
+                    ])) // 🔥 Mengarahkan ke halaman List SingleSupervision dengan filter
+                    ->openUrlInNewTab(), // 🔥 Buka di tab baru
+                Action::make('assessment')
+                    ->label('Nilai')
+                    ->icon('heroicon-o-document-arrow-up')
+                    ->color('success')
+                    ->visible(fn () => Auth::user()?->role === 'principal')
+                    ->form([
+                        \Filament\Forms\Components\TextInput::make('assessment_score')
+                            ->label('Nilai')
+                            ->numeric()
+                            ->minValue(0)
+                            ->maxValue(100)
+                            ->required(),
+                    ])
+                    ->action(function ($record, array $data) {
+                        // dd($record); // 🔥 Cek apakah data dari form masuk
+                        $record->update(['assessment_score' => $data['assessment_score']]);
+                    })
+                    ->modalHeading('Beri Nilai')
+                    ->modalSubmitActionLabel('Simpan')
+                    ->modalCancelActionLabel('Batal')
+                    ->requiresConfirmation(),
             ])
             ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                ]),
+                // Tables\Actions\BulkActionGroup::make([
+                //     Tables\Actions\DeleteBulkAction::make(),
+                // ]),
             ]);
     }
 

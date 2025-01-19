@@ -39,6 +39,7 @@ class CustomDashboard extends Page
     {
         return [
             'manual_book' => School::first()->manual_book,
+            'dashboardImage' => asset('images/dashboardImage.png')
         ];
     }
 }

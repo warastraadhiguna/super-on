@@ -37,6 +37,10 @@
         </div>
     </div>        
     @endif
-
+<div class="flex flex-col items-center justify-center">
+    <img src="{{ $dashboardImage }}" 
+         alt="Dashboard Image" 
+         class="rounded-lg shadow-lg w-full max-w-md md:max-w-sm lg:max-w-xs h-auto object-cover mb-4">
+</div>
 
 </x-filament::page>

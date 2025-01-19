@@ -10,6 +10,8 @@ class ClassroomPeriodTeacherSubjectRelation extends Model
     use HasFactory;
     protected $fillable = [
         'user_id',
+        'principal_id',
+        'assessment_score',
         'period_id',
         'classroom_id',
         'teacher_subject_relation_id',

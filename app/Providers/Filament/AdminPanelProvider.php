@@ -29,6 +29,7 @@ class AdminPanelProvider extends PanelProvider
             ->default()
             ->id('admin')
             ->path('admin')
+        //    ->login(fn () => view('filament.auth.custom-login'))
             ->login()
             ->colors([
                 'primary' => Color::Amber,
@@ -37,7 +38,7 @@ class AdminPanelProvider extends PanelProvider
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
             ->pages([
                 // Pages\Dashboard::class,
-                 CustomDashboard::class,
+                CustomDashboard::class,
             ])
             // ->topNavigation()
             ->sidebarCollapsibleOnDesktop()
@@ -51,7 +52,7 @@ class AdminPanelProvider extends PanelProvider
             ->widgets([
                 Widgets\AccountWidget::class,
                 Widgets\FilamentInfoWidget::class,
-                 StatsOverview::class,
+                StatsOverview::class,
             ])
             ->middleware([
                 EncryptCookies::class,
