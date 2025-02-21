@@ -3,6 +3,7 @@
 namespace App\Filament\Pages;
 
 use App\Filament\Widgets\StatsOverview;
+use App\Models\Announcement;
 use App\Models\School;
 use Filament\Pages\Page;
 use Filament\Widgets\AccountWidget;
@@ -39,7 +40,8 @@ class CustomDashboard extends Page
     {
         return [
             'manual_book' => School::first()->manual_book,
-            'dashboardImage' => asset('images/dashboardImage.png')
+            'dashboardImage' => asset('images/dashboardImage.png'),
+            'announcements' => Announcement::where("is_published", "1")->get(),
         ];
     }
 }
